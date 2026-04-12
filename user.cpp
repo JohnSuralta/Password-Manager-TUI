@@ -12,9 +12,10 @@ user::user() {
 
 // generate password and time stamp for user
 void user::generatePassword() {
-  const int numChars = 76;
+  password = "";
+  const int numChars = 62;
   const int passwordLen = 20;
-  char passwordChars[numChars] = "~!@#$%^&*()_+-={}[]|\\;:\"<>,./?abcdefghijklmnopABCDEFGHIJKLMNOP0123456789";
+  char passwordChars[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
   // seed
   std::srand(time(NULL));
@@ -27,10 +28,20 @@ void user::generatePassword() {
   std::time_t now = std::time(nullptr);
   char *timePtr = std::ctime(&now);
   timeStamp = timePtr;
+
+  // prep for csv (remove '\n')
+  if (!(timeStamp.empty()) &&
+      (timeStamp.back() == '\n' || timeStamp.back() == '\r')) {
+    timeStamp.pop_back();
+  }
 }
 
 std::string user::getUserPassword() const {
-  return password;
+  if (password.empty()) {
+    return "Unavailable";
+  } else {
+    return password;
+  }
 }
 
 std::string user::getPasswordTimeStamp() const {

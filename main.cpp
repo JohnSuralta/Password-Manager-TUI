@@ -13,13 +13,22 @@ Version: 1.0
 #include <chrono>
 #include <thread>
 #include <string>
+#include <cstdlib>
+#include <fstream>
 #include "user.h"
+
+#ifdef _WIN32
+    #define CLEAR "cls"
+#else
+    #define CLEAR "clear"
+#endif
 
 void printTitleScreen();
 void displayActionMenu(bool isAdmin);
 int getUserOption();
 void generatePassword(user &passwordUser);
 void getUserPassword(const user &passwordUser);
+void updateDataBase(const user &passwordUser);
 
 int main() {
   char adminResponse;
@@ -28,10 +37,10 @@ int main() {
   printTitleScreen();
 
   // getting admin status from user
-  std::cout << "\n\n" << std::setw(53) << "Are you an admin (y|n): ";
+  std::cout << std::setw(53) << "Are you an admin (y|n): ";
   while (!(std::cin >> adminResponse) ||
         (adminResponse != 'y' && adminResponse != 'n')) {
-    std::cout << std::setw(58) << "Invalid repsonse, try again: ";
+    std::cout << std::setw(56) << "Invalid repsonse, try again: ";
     std::cin.clear();
     std::cin.ignore(10000, '\n');
   }
@@ -47,6 +56,8 @@ int main() {
 
   // printing option menu based on admin status
   do {
+    system(CLEAR);
+    printTitleScreen();
     displayActionMenu(isAdmin);
     userOption = getUserOption();
     if (isAdmin) {
@@ -61,6 +72,7 @@ int main() {
       switch (userOption) {
         case 1:
           generatePassword(passwordUser);
+          updateDataBase(passwordUser);
           break;
         case 2:
           getUserPassword(passwordUser);
@@ -78,13 +90,13 @@ void printTitleScreen() {
   std::cout << "▗▄▄▖  ▗▄▖  ▗▄▄▖ ▗▄▄▖▗▖ ▗▖ ▗▄▖ ▗▄▄▖ ▗▄▄▄     ▗▖  ▗▖ ▗▄▖ ▗▖  ▗▖ ▗▄▖  ▗▄▄▖▗▄▄▄▖▗▄▄▖ \n";
   std::cout << "▐▌ ▐▌▐▌ ▐▌▐▌   ▐▌   ▐▌ ▐▌▐▌ ▐▌▐▌ ▐▌▐▌  █    ▐▛▚▞▜▌▐▌ ▐▌▐▛▚▖▐▌▐▌ ▐▌▐▌   ▐▌   ▐▌ ▐▌\n";
   std::cout << "▐▛▀▘ ▐▛▀▜▌ ▝▀▚▖ ▝▀▚▖▐▌ ▐▌▐▌ ▐▌▐▛▀▚▖▐▌  █    ▐▌  ▐▌▐▛▀▜▌▐▌ ▝▜▌▐▛▀▜▌▐▌▝▜▌▐▛▀▀▘▐▛▀▚▖\n";
-  std::cout << "▐▌   ▐▌ ▐▌▗▄▄▞▘▗▄▄▞▘▐▙█▟▌▝▚▄▞▘▐▌ ▐▌▐▙▄▄▀    ▐▌  ▐▌▐▌ ▐▌▐▌  ▐▌▐▌ ▐▌▝▚▄▞▘▐▙▄▄▖▐▌ ▐▌\n";
+  std::cout << "▐▌   ▐▌ ▐▌▗▄▄▞▘▗▄▄▞▘▐▙█▟▌▝▚▄▞▘▐▌ ▐▌▐▙▄▄▀    ▐▌  ▐▌▐▌ ▐▌▐▌  ▐▌▐▌ ▐▌▝▚▄▞▘▐▙▄▄▖▐▌ ▐▌\n\n\n";
 }
 
 void displayActionMenu(bool isAdmin) {
   std::cout << std::setw(62) << "╔═════════════ "
             << (isAdmin ? "ADMIN" : "USERS") << " DASHBOARD "
-            << " ═════════════╗" << std::endl;
+            << "══════════════╗" << std::endl;
 
   std::cout << std::setw(22) << "║" << std::string(44, ' ') << "║" << std::endl;
 
@@ -119,7 +131,7 @@ int getUserOption() {
   int userOption;
 
   std::cout << "\n" << std::setw(52) << "Enter your option: ";
-  while (!(std::cin >> userOption) || userOption < 0 || userOption > 3) {
+  while (!(std::cin >> userOption) || userOption < 1 || userOption > 3) {
     std::cout << std::setw(56) << "Invalid option, try again: ";
     std::cin.clear();
     std::cin.ignore(10000, '\n');
@@ -143,12 +155,48 @@ void generatePassword(user &passwordUser) {
   std::cout << std::setw(55) << "Press Enter To Continue...";
   std::cin.ignore();
   std::cin.get();
+  std::cout << "\n\n";
 }
 
 void getUserPassword(const user &passwordUser) {
-  std::cout << "\n\n" << std::setw(43) << "Your password is: "
+  std::cout << std::setw(43) << "Your password is: "
             << passwordUser.getUserPassword() << "\n" << std::endl;
-  std::cout << "Press Enter To Continue";
+  std::cout << std::setw(55) << "Press Enter To Continue...";
   std::cin.ignore();
   std::cin.get();
+  std::cout << "\n\n";
+}
+
+void updateDataBase(const user &passwordUser) {
+  std::string fileName = "passwordDatabase.csv";
+
+  std::ifstream infile;
+  bool fileExists = infile.good();
+
+  if (fileExists) {
+    // checks if any char in file
+    if (infile.peek() != std::ifstream::traits_type::eof()) {
+      fileExists = false;
+    }
+  }
+  infile.close();
+
+
+  std::ofstream outFile;
+  outFile.open(fileName, std::ios::app);  // append mode
+
+  if (outFile.is_open()) {
+    if (!fileExists) {
+      outFile << "ID,Password,Timestamp" << std::endl;
+    }
+
+    outFile << passwordUser.getUserID() << ","
+            << passwordUser.getUserPassword() << ","
+            << passwordUser.getPasswordTimeStamp()
+            << std::endl;
+
+    outFile.close();
+  } else {
+    std::cout << "ERROR: Could not find database";
+  }
 }
