@@ -1,10 +1,6 @@
 #include "user.h"
 #include <ctime>
 #include <string>
-#include <chrono>
-#include <thread>
-#include <iostream>
-#include <iomanip>
 
 // for id
 int user::globalCounter = 1000;
@@ -31,15 +27,18 @@ void user::generatePassword() {
   std::time_t now = std::time(nullptr);
   char *timePtr = std::ctime(&now);
   timeStamp = timePtr;
-
-  // password generating output
-  std::cout << std::setw(48) << "Generating password";
-  std::cout.flush(); // Force "Generating password" to show before the pause
-
-  for (int i = 0; i < 3; ++i) {
-      std::this_thread::sleep_for(std::chrono::milliseconds(750));
-      std::cout << ".";
-      std::cout.flush(); // Ensure each dot shows one by one
-  }
-  std::cout << " SUCCESS!";
 }
+
+std::string user::getUserPassword() const {
+  return password;
+}
+
+std::string user::getPasswordTimeStamp() const {
+  return timeStamp;
+}
+
+int user::getUserID() const {
+  return id;
+}
+
+

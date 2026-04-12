@@ -12,7 +12,10 @@ class user {
     static int globalCounter;
   public:
     user();
+    std::string getUserPassword() const;
+    std::string getPasswordTimeStamp() const;
     void generatePassword();
+    int getUserID() const;
 };
 
 #endif

@@ -12,11 +12,14 @@ Version: 1.0
 #include <iomanip>
 #include <chrono>
 #include <thread>
+#include <string>
 #include "user.h"
 
 void printTitleScreen();
 void displayActionMenu(bool isAdmin);
 int getUserOption();
+void generatePassword(user &passwordUser);
+void getUserPassword(const user &passwordUser);
 
 int main() {
   char adminResponse;
@@ -57,9 +60,11 @@ int main() {
     } else {
       switch (userOption) {
         case 1:
-          passwordUser.generatePassword();
+          generatePassword(passwordUser);
+          break;
         case 2:
-          // view password
+          getUserPassword(passwordUser);
+          break;
         case 3:
           break;
       }
@@ -77,22 +82,43 @@ void printTitleScreen() {
 }
 
 void displayActionMenu(bool isAdmin) {
+  std::cout << std::setw(62) << "╔═════════════ "
+            << (isAdmin ? "ADMIN" : "USERS") << " DASHBOARD "
+            << " ═════════════╗" << std::endl;
+
+  std::cout << std::setw(22) << "║" << std::string(44, ' ') << "║" << std::endl;
+
   if (isAdmin) {
-    std::cout << "\n" << std::setw(55) << "1. Clear Password Database" << std::endl;
-    std::cout << std::setw(51) << "2. Print All Passwords"
-              << std::endl;
-    std::cout << std::setw(36) << "3. Exit" << std::endl;
+    std::cout << std::setw(22) << "║"  << std::setw(36)
+      << "[1] Clear Password Database" << std::setw(11) << "║" << std::endl;
+
+    std::cout << std::setw(22) << "║" << std::setw(32)
+              << "[2] Print All Passwords" << std::setw(15) << "║" << std::endl;
   } else {
-    std::cout << "\n" << std::setw(49) << "1. Generate Password" << std::endl;
-    std::cout << std::setw(45) << "2. View Password" << std::endl;
-    std::cout << std::setw(36) << "3. Exit" << std::endl;
+    std::cout << std::setw(22) << "║" << std::setw(30)
+              << "[1] Generate Password" << std::setw(17) << "║" << std::endl;
+
+    std::cout << std::setw(22) << "║" << std::setw(26)
+              << "[2] View Password" << std::setw(21) << "║" << std::endl;
   }
+
+  std::cout << std::setw(22) << "║" << std::setw(17) << "[3] Exit"
+            << std::setw(30) << "║" << std::endl;
+
+  std::cout << std::setw(22) << "║" << std::string(44, ' ') << "║" << std::endl;
+
+  std::cout << std::setw(22) << "╚";
+  for (int i = 0; i < 44; i++) {
+    std::cout << "═";
+  }
+  std::cout << "╝" << std::endl;
 }
+
 
 int getUserOption() {
   int userOption;
 
-  std::cout << "\n" << std::setw(48) << "Enter your option: ";
+  std::cout << "\n" << std::setw(52) << "Enter your option: ";
   while (!(std::cin >> userOption) || userOption < 0 || userOption > 3) {
     std::cout << std::setw(56) << "Invalid option, try again: ";
     std::cin.clear();
@@ -100,4 +126,29 @@ int getUserOption() {
   }
 
   return userOption;
+}
+
+void generatePassword(user &passwordUser) {
+  passwordUser.generatePassword();
+  std::cout << std::setw(48) << "Generating password";
+  std::cout.flush();  // Force "Generating password" to show before the pause
+
+  for (int i = 0; i < 3; ++i) {
+    std::this_thread::sleep_for(std::chrono::milliseconds(750));
+    std::cout << ".";
+    std::cout.flush();  // Ensure each dot shows one by one
+  }
+  std::cout << " SUCCESS!\n\n" << std::endl;
+
+  std::cout << std::setw(55) << "Press Enter To Continue...";
+  std::cin.ignore();
+  std::cin.get();
+}
+
+void getUserPassword(const user &passwordUser) {
+  std::cout << "\n\n" << std::setw(43) << "Your password is: "
+            << passwordUser.getUserPassword() << "\n" << std::endl;
+  std::cout << "Press Enter To Continue";
+  std::cin.ignore();
+  std::cin.get();
 }
