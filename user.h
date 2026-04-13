@@ -9,7 +9,6 @@ class user {
     std::string password;
     std::string timeStamp;
     unsigned int id;
-    static int globalCounter;
   public:
     user();
     std::string getUserPassword() const;

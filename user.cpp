@@ -2,12 +2,9 @@
 #include <ctime>
 #include <string>
 
-// for id
-int user::globalCounter = 1000;
-
 // unique id for each user
 user::user() {
-  id = globalCounter++;
+  id = 1000 + (rand() & 9000);
 }
 
 // generate password and time stamp for user
@@ -18,7 +15,6 @@ void user::generatePassword() {
   char passwordChars[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
   // seed
-  std::srand(time(NULL));
 
   for (int i = 0; i < passwordLen; i++) {
     password.push_back(passwordChars[rand() % numChars]);
