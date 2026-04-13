@@ -152,7 +152,7 @@ int getUserOption() {
 
 void generatePassword(user &passwordUser) {
   passwordUser.generatePassword();
-  runMessageAnimation("Generating Password:", 52, 750);
+  runMessageAnimation("Generating Password", 52, 750);
   std::cout << std::setw (44) << GREEN << "SUCCESS!" << RESET
             << "\n\n"<< std::endl;
   printPressEnterToContinue();
