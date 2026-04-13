@@ -107,7 +107,8 @@ void database::printAllEntrys() {
     allData.push_back(row);
   }
 
-  if (allData.empty()) {
+  // if size = 0 (empty) of size = 1 (just headers)
+  if (allData.size() <= 1) {
     std::cout << std::setw(33) << RED << "ERROR:" << RESET
               << " Database is currently empty";
     printPressEnterToContinue();
