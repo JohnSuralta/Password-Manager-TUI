@@ -1,20 +1,23 @@
 #include "user.h"
+
 #include <ctime>
+#include <cstdlib>
 #include <string>
 
-// unique id for each user
+// constructor: unique id for each user
 user::user() {
   id = 1000 + (rand() & 9000);
 }
 
-// generate password and time stamp for user
+/*
+ * @brief generates a length 20 password consisting of a-z, A-Z, 0-9
+ * * included timestamp assignment after password generation
+ */
 void user::generatePassword() {
   password = "";
   const int numChars = 62;
   const int passwordLen = 20;
   char passwordChars[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-
-  // seed
 
   for (int i = 0; i < passwordLen; i++) {
     password.push_back(passwordChars[rand() % numChars]);
@@ -33,11 +36,7 @@ void user::generatePassword() {
 }
 
 std::string user::getUserPassword() const {
-  if (password.empty()) {
-    return "Unavailable";
-  } else {
-    return password;
-  }
+  return password.empty() ? "Unavailable" : password;
 }
 
 std::string user::getPasswordTimeStamp() const {
