@@ -29,6 +29,10 @@ attacks nearly impossible.
 ---
 
 ## Error Checking
+![Admin Error Check](https://github.com/JohnSuralta/Password-Manager-TUI/blob/main/Error%20Checking%20Demos/Admin%20Error%20Check.png?raw=true)
+![No User Generated Passwords Check](https://github.com/JohnSuralta/Password-Manager-TUI/blob/main/Error%20Checking%20Demos/No%20User%20Generated%20Passwords%20Check.png?raw=true)
+![Option Error Check](https://github.com/JohnSuralta/Password-Manager-TUI/blob/main/Error%20Checking%20Demos/Option%20Error%20Check.png?raw=true)
+![Printing Passwords When Database Empty Check](https://github.com/JohnSuralta/Password-Manager-TUI/blob/main/Error%20Checking%20Demos/Printing%20Passwords%20When%20Database%20Empty%20Check.png?raw=true)
 
 
 
