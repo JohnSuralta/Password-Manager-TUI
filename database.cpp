@@ -86,6 +86,7 @@ void database::printAllEntrys() {
   if (!inFile.is_open()) {
     std::cout << std::setw(35) << RED << "ERROR:" << RESET
               << " Could not access database" << std::endl;
+    printPressEnterToContinue();
     return;
   }
   std::string currentFileLine;
@@ -109,6 +110,8 @@ void database::printAllEntrys() {
   if (allData.empty()) {
     std::cout << std::setw(33) << RED << "ERROR:" << RESET
               << " Database is currently empty";
+    printPressEnterToContinue();
+
     return;
   }
 
